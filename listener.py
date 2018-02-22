@@ -3,6 +3,7 @@ import os
 import json
 import datetime
 import tweepy
+import pprint
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -24,29 +25,11 @@ class Listener(StreamListener):
 	def on_error(self, status):
 		print(status, "here")
 
-def get_tweets_by_date(user, start_date, end_date, api):
-	
-	tweets = []
-
+def get_tweets_by_date(user, api):
 	for status in tweepy.Cursor(api.user_timeline,
-								id = user,
-								max_id = 940636418254110720).items():
-		if status.created_at < end_date and status.created_at > start_date:
-			tweets.append(status)
-			print("Here?")
-			print(len(tweets))
-
-	while tweets[-1].created_at > start_date:
-		print("Last Tweet @", tweets[-1].created_at, "with id", tweets[-1].id, "- fetching some more")
-		for status in tweepy.Cursor(api.user_timeline,
-									id = user,
-									max_id = tweets[-1].id - 1).items():
-			if status.created_at < end_date and status.created_at > start_date:
-				tweets.append(status)
-				print(status.id)
-				print(len(tweets))
-
-	return len(tweets)
+								id = user).items():
+		pprint.pprint(status._json)
+		#print(json.dumps(parsed, indent = 2))
 
 if __name__ == '__main__':
 	auth = OAuthHandler(ckey, csecret)
@@ -58,10 +41,13 @@ if __name__ == '__main__':
 	#twitterStream = Stream(auth, Listener())
 	#twitterStream.filter(track = ["Austin"])
 
-	start_date = datetime.datetime(2017, 1, 1)
-	end_date = datetime.datetime(2018, 1, 1)
-	print(start_date, end_date)
+	acquirees = ["the60dB", "Dialogflow", "itasoftware", "Zyncrender", "Anvato"]
+	date_acquired = ["10-11-2017", "9-19-2016", "4-12-2011", "8-26-2014", "7-8-2016"]
 
-	tweets = get_tweets_by_date('Google', start_date, end_date, api)
-	print(tweets)
+	for acquiree in acquirees:
+		get_tweets_by_date(acquiree, api)
+
+
+
+
 
