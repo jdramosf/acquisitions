@@ -23,7 +23,7 @@ asecret = settings.TOKEN_SECRET
 #nltk.download('stopwords')
 #nltk.download('punkt')
 punctuation = list(string.punctuation)
-stop = stopwords.words('english') + punctuation + ['rt', 'via']
+stop = stopwords.words('english') + punctuation + ['RT', 'via']
 
 emoticons_str = r"""
     (?:
