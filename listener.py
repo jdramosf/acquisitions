@@ -77,7 +77,7 @@ def get_tweets_by_date(user, limit, api):
 			row = {}
 			row['user'] = user
 			row['created_at'] = status.created_at
-			row['text'] = [w for w in preprocess(status.text) if w not in stop]
+			row['text'] = [w for w in preprocess(status.text) if w.lower() not in stop]
 			result.append(row)
 	
 	return result
