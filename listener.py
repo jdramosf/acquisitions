@@ -82,7 +82,7 @@ def get_tweets_by_date(user, limit, api):
             pre = preprocess(status.text, lowercase=True)
             words = []
             for w in pre:
-                if (w not in stop) and (w[0] != "#" or w[0] != "@") and (user.lower() not in w):
+                if (w not in stop) and (user.lower() not in w) and ('http' not in w):
                     words.append(w)
                 elif (user.lower() in w):
                     #print(w)
@@ -170,19 +170,56 @@ if __name__ == '__main__':
         "5-21-2012",
         "6-18-2012",
         "4-25-2013"
-]
+    ]
+
+    acquirers = [
+        #"Google",
+        "Google",
+        "Google",
+        "Google",
+        "Google",
+        "Google",
+        "Google",
+        "Google",
+        "Microsoft",
+        "Microsoft",
+        "Microsoft",
+        "Microsoft",
+        "Microsoft",
+        "Microsoft",
+        "Microsoft",
+        "Microsoft",
+        "Apple",
+        "Apple",
+        "Apple",
+        "Apple",
+        "Apple",
+        "Apple",
+        "Apple",
+        "Apple",
+        "Facebook",
+        "Facebook",
+        "Facebook",
+        "Facebook",
+        "Facebook",
+        "Facebook",
+        "Facebook",
+        "Facebook",
+    ]
 
     for i in range(len(acquirees)):
         result = get_tweets_by_date(acquirees[i], date_acquired[i], api)
         df = pandas.DataFrame(result)
-        #df.to_csv('raw_data/' + acquirees[i] + '.csv', encoding = 'utf-8')
+        df.to_csv('raw_data/' + acquirees[i] + '.csv', encoding = 'utf-8')
 
         # Term frequency
         count_all = Counter()
         tweet_list = df['text'].tolist()
+        """
         for tweet in tweet_list:
             count_all.update(tweet)
         print(acquirees[i], count_all.most_common(5))
+        """
 
         # Bigrams
         all_term_bigrams = []
@@ -195,5 +232,18 @@ if __name__ == '__main__':
 
         frequencies = Counter()
         frequencies.update(all_term_bigrams)
-        print(frequencies.most_common(5))
+        top_20 = (frequencies.most_common(20))
+        bigram_analysis = []
+        for bigram in top_20:
+            row = {}
+            row['word_1'] = bigram[0][0]
+            row['word_2'] = bigram[0][1]
+            row['count'] = bigram[1]
+            row['user'] = acquirees[i]
+            row['source'] = acquirers[i]
+            bigram_analysis.append(row)
+        bi_df = pandas.DataFrame(bigram_analysis)
+        bi_df.to_csv('analysis/' + acquirees[i] + '.csv', encoding = 'utf-8')
+        print(acquirees[i], 'done')
+
         
