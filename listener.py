@@ -94,7 +94,7 @@ def get_tweets_by_date(user, limit, api):
 
 def listen(auth, topic):
     twitterStream = tweepy.Stream(auth, Listener())
-    twitterStream.filter(track = ["stay tuned", "techcrunch", topic], async=True)
+    twitterStream.filter(track = ["stay tuned", "@TechCrunch", topic], async=True)
 
 
 if __name__ == '__main__':
@@ -247,4 +247,4 @@ if __name__ == '__main__':
         print(acquirees[i], 'done')
 
 
-    listen(auth, 'machine learning')
+    listen(auth, '#blockchain')
