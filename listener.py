@@ -92,15 +92,16 @@ def get_tweets_by_date(user, limit, api):
 
     return result
 
+def listen(auth, topic):
+    twitterStream = tweepy.Stream(auth, Listener())
+    twitterStream.filter(track = ["stay tuned", "techcrunch", topic], async=True)
+
+
 if __name__ == '__main__':
     auth = tweepy.OAuthHandler(ckey, csecret)
     auth.set_access_token(atoken, asecret)
 
     api = tweepy.API(auth)
-
-    # I've disabled the listener for now, since we want to look at historical data
-    #twitterStream = Stream(auth, Listener())
-    #twitterStream.filter(track = ["Austin"])
 
     # Not including DeepMindAI because it doesn't return any results
     acquirees = [
@@ -215,11 +216,10 @@ if __name__ == '__main__':
         # Term frequency
         count_all = Counter()
         tweet_list = df['text'].tolist()
-        """
+        
         for tweet in tweet_list:
             count_all.update(tweet)
         print(acquirees[i], count_all.most_common(5))
-        """
 
         # Bigrams
         all_term_bigrams = []
@@ -246,4 +246,5 @@ if __name__ == '__main__':
         bi_df.to_csv('analysis/' + acquirees[i] + '.csv', encoding = 'utf-8')
         print(acquirees[i], 'done')
 
-        
+
+    listen(auth, 'machine learning')
